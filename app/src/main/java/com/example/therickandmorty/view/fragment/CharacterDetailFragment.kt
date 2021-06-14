@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
 import com.example.therickandmorty.R
 import com.example.therickandmorty.databinding.FragmentCharacterDetailBinding
@@ -41,6 +42,12 @@ class CharacterDetailFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        sharedElementEnterTransition =
+            TransitionInflater
+                .from(context)
+                .inflateTransition(android.R.transition.move)
+
     }
 
     override fun onCreateView(
@@ -62,6 +69,11 @@ class CharacterDetailFragment : Fragment() {
             Glide.with(headImageView.context)
                 .load(this.image)
                 .into(headImageView)
+
+            /**
+             * Update the transitionNames for sharedElementEnterTransition
+             */
+            headImageView.transitionName = this.id.toString()
 
             nameTextView.text = this.name
 

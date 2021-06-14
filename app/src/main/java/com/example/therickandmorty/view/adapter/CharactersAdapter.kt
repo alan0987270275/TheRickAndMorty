@@ -2,20 +2,24 @@ package com.example.therickandmorty.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.therickandmorty.R
 import com.example.therickandmorty.data.model.Character
 import com.example.therickandmorty.databinding.RecyclerItemCharacterBinding
+import kotlinx.android.synthetic.main.recycler_item_character.view.*
 
 class CharactersAdapter(private val characterList: ArrayList<Character>, _onItemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(character: Character, imageView: ImageView)
     }
     private var onItemClickListener: OnItemClickListener? = _onItemClickListener
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder =
         CharacterViewHolder(
@@ -30,8 +34,7 @@ class CharactersAdapter(private val characterList: ArrayList<Character>, _onItem
         holder.bind(characterList[position])
 
         holder.itemView.setOnClickListener {
-            it.findNavController().navigate(R.id.action_characterListFragment_to_characterDetailFragment)
-            onItemClickListener?.onItemClick(position)
+            onItemClickListener?.onItemClick(characterList[position], holder.itemView.headImageView )
         }
     }
 
@@ -60,10 +63,12 @@ class CharactersAdapter(private val characterList: ArrayList<Character>, _onItem
             itemView.apply {
                 itemView.apply {
 
-                    Glide.with(headImageView.context)
-                        .load(character.image)
-                        .into(headImageView)
-
+                    headImageView.apply {
+                        transitionName = character.id.toString()
+                        Glide.with(this.context)
+                            .load(character.image)
+                            .into(this)
+                    }
                     nameTextView.text = character.name
                 }
             }

@@ -6,13 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.therickandmorty.R
 import com.example.therickandmorty.data.api.ApiHelper
 import com.example.therickandmorty.data.api.RetrofitBuilder
+import com.example.therickandmorty.data.model.Character
 import com.example.therickandmorty.data.model.Characters
 import com.example.therickandmorty.databinding.FragmentCharacterListBinding
 import com.example.therickandmorty.util.Status
@@ -20,6 +25,7 @@ import com.example.therickandmorty.util.ViewModelFactory
 import com.example.therickandmorty.view.adapter.CharactersAdapter
 import com.example.therickandmorty.view.viewModel.CharactersViewModel
 import com.example.therickandmorty.view.viewModel.ShareSelectedCharacterViewModel
+import kotlinx.android.synthetic.main.recycler_item_character.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,8 +69,20 @@ class CharacterListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fixPressBackSharedTransition()
         initView()
         initObservers()
+    }
+
+
+    /**
+     * To solve the return transition problem
+     */
+    private fun fixPressBackSharedTransition() = with(binding) {
+        postponeEnterTransition()
+        recyclerView.post {
+            startPostponedEnterTransition()
+        }
     }
 
     private fun initViewModel() {
@@ -76,12 +94,27 @@ class CharacterListFragment : Fragment() {
 
     private fun initView() = with(binding) {
         val gridLayoutManager = GridLayoutManager(context, 2)
-        adapter = CharactersAdapter(arrayListOf(), object: CharactersAdapter.OnItemClickListener{
-            override fun onItemClick(position: Int) {
-                shareViewModel.select(adapter.getItem(position))
+
+        adapter = CharactersAdapter(arrayListOf(), object : CharactersAdapter.OnItemClickListener {
+
+            override fun onItemClick(character: Character, imageView: ImageView) {
+                shareViewModel.select(character)
+                /**
+                 * Using the FragmentNavigatorExtras to pass the view reference
+                 * with the transition name to the Destination Fragment, for it to work it has to be
+                 * unique otherwise it will target the last element with the same transition name.
+                 */
+                val extras = FragmentNavigatorExtras(
+                    imageView to character.id.toString()
+                )
+                findNavController().navigate(
+                    R.id.action_characterListFragment_to_characterDetailFragment,
+                    null,
+                    null,
+                    extras
+                )
             }
         })
-
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = adapter
     }
@@ -93,7 +126,7 @@ class CharacterListFragment : Fragment() {
 
     private fun setDataToRecyclerView(randomPage: String, action: String) = with(binding) {
         viewModel.getCharacterList().observe(requireActivity(), Observer {
-            when(it.status) {
+            when (it.status) {
                 Status.SUCCESS -> {
                     it.data?.let { list -> renderList(list) }
 
@@ -102,7 +135,7 @@ class CharacterListFragment : Fragment() {
 
                 }
                 Status.ERROR -> {
-                    Log.e(TAG,"VIEWMODEL ERROR: ${it.message}")
+                    Log.e(TAG, "VIEWMODEL ERROR: ${it.message}")
                 }
             }
         })
