@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +19,7 @@ import com.example.therickandmorty.util.Status
 import com.example.therickandmorty.util.ViewModelFactory
 import com.example.therickandmorty.view.adapter.CharactersAdapter
 import com.example.therickandmorty.view.viewModel.CharactersViewModel
+import com.example.therickandmorty.view.viewModel.ShareSelectedCharacterViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,6 +40,7 @@ class CharacterListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: CharactersViewModel
+    private val shareViewModel: ShareSelectedCharacterViewModel by activityViewModels()
     private lateinit var adapter: CharactersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +76,11 @@ class CharacterListFragment : Fragment() {
 
     private fun initView() = with(binding) {
         val gridLayoutManager = GridLayoutManager(context, 2)
-        adapter = CharactersAdapter(arrayListOf())
+        adapter = CharactersAdapter(arrayListOf(), object: CharactersAdapter.OnItemClickListener{
+            override fun onItemClick(position: Int) {
+                shareViewModel.select(adapter.getItem(position))
+            }
+        })
 
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = adapter
