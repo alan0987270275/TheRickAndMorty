@@ -1,11 +1,14 @@
 package com.example.therickandmorty.view.fragment
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 import com.example.therickandmorty.R
 import com.example.therickandmorty.databinding.FragmentCharacterDetailBinding
 import com.example.therickandmorty.databinding.FragmentCharacterListBinding
@@ -54,9 +57,33 @@ class CharacterDetailFragment : Fragment() {
         initView()
     }
 
-    private fun initView() = with(binding) {
+    private fun initView() = with(binding)  {
         sharedModel.selected.value?.apply {
-            textView.text = this.name
+            Glide.with(headImageView.context)
+                .load(this.image)
+                .into(headImageView)
+
+            nameTextView.text = this.name
+
+            aliveStatusTextView.text = this.status
+            when(this.status) {
+                "Alive" -> {
+                    aliveStatusImageView.colorFilter =
+                        PorterDuffColorFilter(resources.getColor(R.color.green), PorterDuff.Mode.SRC_ATOP)
+                }
+                "unknown" -> {
+                    aliveStatusImageView.colorFilter =
+                        PorterDuffColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                }
+                "Dead" -> {
+                    aliveStatusImageView.colorFilter =
+                        PorterDuffColorFilter(resources.getColor(R.color.red), PorterDuff.Mode.SRC_ATOP)
+                }
+
+            }
+
+            locationTextView.text = this.location.name
+            firstSeenTextView.text = this.origin.name
         }
 
     }
