@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.therickandmorty.R
 import com.example.therickandmorty.databinding.FragmentCharacterListBinding
+import com.example.therickandmorty.view.adapter.CharactersAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +27,8 @@ class CharacterListFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentCharacterListBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter: CharactersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +53,11 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
-        textView.setOnClickListener{
-            Navigation.findNavController(it).navigate(R.id.action_characterListFragment_to_characterDetailFragment)
-        }
+        val gridLayoutManager = GridLayoutManager(context, 2)
+        adapter = CharactersAdapter()
+
+        recyclerView.layoutManager = gridLayoutManager
+        recyclerView.adapter = adapter
     }
 
     companion object {
