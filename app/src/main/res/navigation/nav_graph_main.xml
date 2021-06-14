@@ -5,7 +5,7 @@
     android:id="@+id/nav_graph_main"
     app:startDestination="@id/characterListFragment">
 
-    <custom_fragment
+    <fragment
         android:id="@+id/characterListFragment"
         android:name="com.example.therickandmorty.view.fragment.CharacterListFragment"
         android:label="fragment_character_list"
@@ -13,8 +13,8 @@
         <action
             android:id="@+id/action_characterListFragment_to_characterDetailFragment"
             app:destination="@id/characterDetailFragment" />
-    </custom_fragment>
-    <custom_fragment
+    </fragment>
+    <fragment
         android:id="@+id/characterDetailFragment"
         android:name="com.example.therickandmorty.view.fragment.CharacterDetailFragment"
         android:label="fragment_character_detail"

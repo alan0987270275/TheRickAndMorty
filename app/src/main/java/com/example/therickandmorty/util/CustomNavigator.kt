@@ -38,7 +38,7 @@ class CustomNavigator(
             fragment = manager.fragmentFactory.instantiate(context.classLoader, className)
             transaction.add(containerId, fragment, tag)
         } else {
-            transaction.attach(fragment)
+            transaction.show(fragment)
         }
 
         transaction.setPrimaryNavigationFragment(fragment)
