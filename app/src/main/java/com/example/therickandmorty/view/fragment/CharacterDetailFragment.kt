@@ -8,11 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
 import com.example.therickandmorty.R
 import com.example.therickandmorty.databinding.FragmentCharacterDetailBinding
-import com.example.therickandmorty.databinding.FragmentCharacterListBinding
+import com.example.therickandmorty.view.adapter.EpisodeAdapter
 import com.example.therickandmorty.view.viewModel.ShareSelectedCharacterViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,7 +35,6 @@ class CharacterDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val sharedModel: ShareSelectedCharacterViewModel by activityViewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class CharacterDetailFragment : Fragment() {
         initView()
     }
 
-    private fun initView() = with(binding)  {
+    private fun initView() = with(binding) {
         sharedModel.selected.value?.apply {
             Glide.with(headImageView.context)
                 .load(this.image)
@@ -78,26 +78,43 @@ class CharacterDetailFragment : Fragment() {
             nameTextView.text = this.name
 
             aliveStatusTextView.text = this.status
-            when(this.status) {
+            when (this.status) {
                 "Alive" -> {
                     aliveStatusImageView.colorFilter =
-                        PorterDuffColorFilter(resources.getColor(R.color.green), PorterDuff.Mode.SRC_ATOP)
+                        PorterDuffColorFilter(
+                            resources.getColor(R.color.green),
+                            PorterDuff.Mode.SRC_ATOP
+                        )
                 }
                 "unknown" -> {
                     aliveStatusImageView.colorFilter =
-                        PorterDuffColorFilter(resources.getColor(R.color.gray), PorterDuff.Mode.SRC_ATOP)
+                        PorterDuffColorFilter(
+                            resources.getColor(R.color.gray),
+                            PorterDuff.Mode.SRC_ATOP
+                        )
                 }
                 "Dead" -> {
                     aliveStatusImageView.colorFilter =
-                        PorterDuffColorFilter(resources.getColor(R.color.red), PorterDuff.Mode.SRC_ATOP)
+                        PorterDuffColorFilter(
+                            resources.getColor(R.color.red),
+                            PorterDuff.Mode.SRC_ATOP
+                        )
                 }
 
             }
 
             locationTextView.text = this.location.name
             firstSeenTextView.text = this.origin.name
+            initRecyclerView(this.episode)
         }
 
+    }
+
+    private fun initRecyclerView(episode: List<String>) = with(binding) {
+        val linearLayoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        episodeRecyclerView.adapter = EpisodeAdapter(episode)
+        episodeRecyclerView.layoutManager = linearLayoutManager
     }
 
     companion object {

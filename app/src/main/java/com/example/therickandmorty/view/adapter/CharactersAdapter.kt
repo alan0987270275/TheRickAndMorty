@@ -61,16 +61,14 @@ class CharactersAdapter(private val characterList: ArrayList<Character>, _onItem
         RecyclerView.ViewHolder(itemCharacterBinding.root) {
         fun bind(character: Character) = with(itemCharacterBinding) {
             itemView.apply {
-                itemView.apply {
 
-                    headImageView.apply {
-                        transitionName = character.id.toString()
-                        Glide.with(this.context)
-                            .load(character.image)
-                            .into(this)
-                    }
-                    nameTextView.text = character.name
+                headImageView.apply {
+                    transitionName = character.id.toString()
+                    Glide.with(this.context)
+                        .load(character.image)
+                        .into(this)
                 }
+                nameTextView.text = character.name
             }
         }
     }
