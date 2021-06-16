@@ -16,7 +16,7 @@ class CharactersViewModel (private val charactersRepository: CharactersRepositor
         val randomPage = (1..34).random().toString()
         fetchCharacters(randomPage)
     }
-    private fun fetchCharacters(page: String) {
+    fun fetchCharacters(page: String) {
         viewModelScope.launch {
             characterList.postValue(Resource.loading(null))
             try {

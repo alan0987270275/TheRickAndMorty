@@ -117,6 +117,10 @@ class CharacterListFragment : Fragment() {
         })
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = adapter
+        swipeRefreshLayout.setOnRefreshListener {
+            val randomPage = (1..34).random().toString()
+            viewModel.fetchCharacters(randomPage)
+        }
     }
 
     private fun initObservers() {
@@ -129,10 +133,11 @@ class CharacterListFragment : Fragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     it.data?.let { list -> renderList(list) }
+                    swipeRefreshLayout.isRefreshing = false
 
                 }
                 Status.LOADING -> {
-
+                    swipeRefreshLayout.isRefreshing = true
                 }
                 Status.ERROR -> {
                     Log.e(TAG, "VIEWMODEL ERROR: ${it.message}")
