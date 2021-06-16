@@ -10,10 +10,10 @@ import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.therickandmorty.R
 import com.example.therickandmorty.data.api.ApiHelper
 import com.example.therickandmorty.data.api.RetrofitBuilder
@@ -25,7 +25,6 @@ import com.example.therickandmorty.util.ViewModelFactory
 import com.example.therickandmorty.view.adapter.CharactersAdapter
 import com.example.therickandmorty.view.viewModel.CharactersViewModel
 import com.example.therickandmorty.view.viewModel.ShareSelectedCharacterViewModel
-import kotlinx.android.synthetic.main.recycler_item_character.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +39,8 @@ private const val ARG_PARAM2 = "param2"
 class CharacterListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private val TAG: String = CharacterListFragment::class.java.name
+    private val VISIBLE_THRESHOLD = 1
+
     private var param1: String? = null
     private var param2: String? = null
     private var _binding: FragmentCharacterListBinding? = null
@@ -48,6 +49,7 @@ class CharacterListFragment : Fragment() {
     private lateinit var viewModel: CharactersViewModel
     private val shareViewModel: ShareSelectedCharacterViewModel by activityViewModels()
     private lateinit var adapter: CharactersAdapter
+    private var loadMore = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +119,20 @@ class CharacterListFragment : Fragment() {
         })
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = adapter
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (loadMore) {
+                    val lastItemPosition =
+                        gridLayoutManager.findLastVisibleItemPosition() + VISIBLE_THRESHOLD
+                    if (dy > 0 && lastItemPosition >= gridLayoutManager.itemCount) {
+                        loadMore = false
+                        val randomPage = (1..34).random().toString()
+                        viewModel.addCharacters(randomPage)
+                    }
+                }
+            }
+        })
+
         swipeRefreshLayout.setOnRefreshListener {
             val randomPage = (1..34).random().toString()
             viewModel.fetchCharacters(randomPage)
@@ -124,15 +140,21 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun initObservers() {
-        val randomPage = (1..34).random().toString()
-        setDataToRecyclerView(randomPage, "render")
+        setDataToRecyclerView()
     }
 
-    private fun setDataToRecyclerView(randomPage: String, action: String) = with(binding) {
+    private fun setDataToRecyclerView() = with(binding) {
         viewModel.getCharacterList().observe(requireActivity(), Observer {
             when (it.status) {
                 Status.SUCCESS -> {
-                    it.data?.let { list -> renderList(list) }
+                    it.data?.let { list ->
+                        if (list.results.size <= 20) {
+                            renderList(list)
+                        } else {
+                            addAllList(list)
+                        }
+                    }
+                    loadMore = true
                     swipeRefreshLayout.isRefreshing = false
 
                 }
@@ -155,8 +177,10 @@ class CharacterListFragment : Fragment() {
 
     private fun addAllList(characters: Characters) {
         adapter.apply {
-            addAllCharacters(characters.results)
-            notifyDataSetChanged()
+            val size = adapter.itemCount
+            addAllCharacters(characters.results.subList(adapter.itemCount, characters.results.size))
+            val newSize = adapter.itemCount
+            notifyItemMoved(size, newSize)
         }
     }
 
@@ -180,4 +204,6 @@ class CharacterListFragment : Fragment() {
                 }
             }
     }
+
+
 }

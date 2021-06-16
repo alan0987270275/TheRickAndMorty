@@ -1,5 +1,6 @@
 package com.example.therickandmorty.view.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ class CharactersViewModel (private val charactersRepository: CharactersRepositor
         val randomPage = (1..34).random().toString()
         fetchCharacters(randomPage)
     }
+
     fun fetchCharacters(page: String) {
         viewModelScope.launch {
             characterList.postValue(Resource.loading(null))
@@ -32,5 +34,32 @@ class CharactersViewModel (private val charactersRepository: CharactersRepositor
         }
     }
 
-    fun getCharacterList() = characterList
+    fun addCharacters(page: String) {
+        viewModelScope.launch {
+            try {
+                val data = charactersRepository.getCharacters(page)
+                if(data.results.isNotEmpty()) {
+//                    characterList.postValue(Resource.success(data))
+                    data.results?.forEach { it ->
+                        characterList.value?.data?.results?.add(it)
+                    }
+//                    characterList.value?.data?.results?.addAll(data.results)
+                    characterList.notifyObserver()
+                }
+            } catch (e: Exception) {
+                characterList.postValue(Resource.error(e.toString(), null))
+            }
+        }
+    }
+
+    private fun <T> MutableLiveData<T>.notifyObserver() {
+        // Make this call can using the background thread to change the LiveData,
+        this.postValue(this.value)
+        // Using setValue can only call in MainThread
+//        this.value = this.value
+    }
+
+    fun getCharacterList() : LiveData<Resource<Characters>>{
+        return characterList
+    }
 }
