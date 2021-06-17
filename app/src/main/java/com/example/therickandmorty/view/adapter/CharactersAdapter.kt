@@ -12,12 +12,16 @@ import com.example.therickandmorty.data.model.Character
 import com.example.therickandmorty.databinding.RecyclerItemCharacterBinding
 import kotlinx.android.synthetic.main.recycler_item_character.view.*
 
-class CharactersAdapter(private val characterList: ArrayList<Character>, _onItemClickListener: OnItemClickListener) :
+class CharactersAdapter(
+    private val characterList: ArrayList<Character>,
+    _onItemClickListener: OnItemClickListener
+) :
     RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(character: Character, imageView: ImageView)
     }
+
     private var onItemClickListener: OnItemClickListener? = _onItemClickListener
 
 
@@ -27,15 +31,12 @@ class CharactersAdapter(private val characterList: ArrayList<Character>, _onItem
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onItemClickListener
         )
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         holder.bind(characterList[position])
-
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onItemClick(characterList[position], holder.itemView.headImageView )
-        }
     }
 
     override fun getItemCount() = characterList.size
@@ -57,10 +58,17 @@ class CharactersAdapter(private val characterList: ArrayList<Character>, _onItem
         characterList.add(character)
     }
 
-    class CharacterViewHolder(private val itemCharacterBinding: RecyclerItemCharacterBinding) :
+    class CharacterViewHolder(
+        itemCharacterBinding: RecyclerItemCharacterBinding,
+        private var onItemClickListener: OnItemClickListener? = null
+    ) :
         RecyclerView.ViewHolder(itemCharacterBinding.root) {
-        fun bind(character: Character) = with(itemCharacterBinding) {
+        fun bind(character: Character) {
             itemView.apply {
+
+                setOnClickListener {
+                    onItemClickListener?.onItemClick(character, itemView.headImageView)
+                }
 
                 headImageView.apply {
                     transitionName = character.id.toString()
@@ -68,6 +76,7 @@ class CharactersAdapter(private val characterList: ArrayList<Character>, _onItem
                         .load(character.image)
                         .into(this)
                 }
+                
                 nameTextView.text = character.name
             }
         }
