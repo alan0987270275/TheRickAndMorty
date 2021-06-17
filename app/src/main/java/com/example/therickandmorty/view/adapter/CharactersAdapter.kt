@@ -76,7 +76,7 @@ class CharactersAdapter(
                         .load(character.image)
                         .into(this)
                 }
-                
+
                 nameTextView.text = character.name
             }
         }
