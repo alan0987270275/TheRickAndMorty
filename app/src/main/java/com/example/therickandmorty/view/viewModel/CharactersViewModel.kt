@@ -12,17 +12,25 @@ import kotlinx.coroutines.launch
 class CharactersViewModel (private val charactersRepository: CharactersRepository) : ViewModel() {
 
     private val characterList = MutableLiveData<Resource<Characters>>()
+    private var oldCharacterList: Characters? = null
 
     init {
         val randomPage = (1..34).random().toString()
         fetchCharacters(randomPage)
     }
 
+    /***
+     * For first time fetch and refresh.
+     */
     fun fetchCharacters(page: String) {
         viewModelScope.launch {
             characterList.postValue(Resource.loading(null))
             try {
                 val data = charactersRepository.getCharacters(page)
+                /**
+                 * Save first time fetched data into a buffer for the load more action.
+                 */
+                oldCharacterList = data
                 if(data.results.isNotEmpty()) {
                     characterList.postValue(Resource.success(data))
                 } else {
@@ -34,17 +42,20 @@ class CharactersViewModel (private val charactersRepository: CharactersRepositor
         }
     }
 
+    /***
+     * For load more.
+     */
     fun addCharacters(page: String) {
         viewModelScope.launch {
+            characterList.postValue(Resource.loading(null))
             try {
                 val data = charactersRepository.getCharacters(page)
                 if(data.results.isNotEmpty()) {
-//                    characterList.postValue(Resource.success(data))
-                    data.results?.forEach { it ->
-                        characterList.value?.data?.results?.add(it)
-                    }
-//                    characterList.value?.data?.results?.addAll(data.results)
-                    characterList.notifyObserver()
+                    /**
+                     * Get old data and add new data into it.
+                     */
+                    oldCharacterList?.results?.addAll(data.results)
+                    characterList.postValue(Resource.success(oldCharacterList))
                 }
             } catch (e: Exception) {
                 characterList.postValue(Resource.error(e.toString(), null))
