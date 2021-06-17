@@ -97,7 +97,7 @@ class CharacterListFragment : Fragment() {
     private fun initView() = with(binding) {
         val gridLayoutManager = GridLayoutManager(context, 2)
 
-        adapter = CharactersAdapter(arrayListOf(), object : CharactersAdapter.OnItemClickListener {
+        adapter = CharactersAdapter(object : CharactersAdapter.OnItemClickListener {
 
             override fun onItemClick(character: Character, imageView: ImageView) {
                 shareViewModel.select(character)
@@ -148,11 +148,12 @@ class CharacterListFragment : Fragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     it.data?.let { list ->
-                        if (list.results.size <= 20) {
-                            renderList(list)
-                        } else {
-                            addAllList(list)
-                        }
+                        Log.d(TAG, "Size: ${list.results.size}")
+                        /**
+                         * Must use toList() to create a new List everytime, due to
+                         * using the AsyncListDiffer.
+                         */
+                        adapter.differ.submitList(list.results.toList())
                     }
                     loadMore = true
                     swipeRefreshLayout.isRefreshing = false
@@ -167,23 +168,6 @@ class CharacterListFragment : Fragment() {
             }
         })
     }
-
-    private fun renderList(characters: Characters) {
-        adapter.apply {
-            renderCharacters(characters.results)
-            notifyDataSetChanged()
-        }
-    }
-
-    private fun addAllList(characters: Characters) {
-        adapter.apply {
-            val size = adapter.itemCount
-            addAllCharacters(characters.results.subList(adapter.itemCount, characters.results.size))
-            val newSize = adapter.itemCount
-            notifyItemMoved(size, newSize)
-        }
-    }
-
 
     companion object {
         /**

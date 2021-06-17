@@ -3,17 +3,15 @@ package com.example.therickandmorty.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.therickandmorty.R
 import com.example.therickandmorty.data.model.Character
 import com.example.therickandmorty.databinding.RecyclerItemCharacterBinding
 import kotlinx.android.synthetic.main.recycler_item_character.view.*
 
 class CharactersAdapter(
-    private val characterList: ArrayList<Character>,
     _onItemClickListener: OnItemClickListener
 ) :
     RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
@@ -24,6 +22,17 @@ class CharactersAdapter(
 
     private var onItemClickListener: OnItemClickListener? = _onItemClickListener
 
+    private val differCallback = object : DiffUtil.ItemCallback<Character>() {
+        override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean {
+            return oldItem.url == newItem.url
+        }
+
+        override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder =
         CharacterViewHolder(
@@ -36,29 +45,12 @@ class CharactersAdapter(
         )
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        holder.bind(characterList[position])
+        holder.bind(differ.currentList[position])
     }
 
-    override fun getItemCount() = characterList.size
+    override fun getItemCount() = differ.currentList.size
 
-    fun getItem(position: Int) = characterList[position]
-
-    fun renderCharacters(list: List<Character>) {
-        characterList.apply {
-            clear()
-            addAll(list)
-        }
-    }
-
-    fun addAllCharacters(list: List<Character>) {
-        characterList.addAll(list)
-    }
-
-    fun addCharacter(character: Character) {
-        characterList.add(character)
-    }
-
-    class CharacterViewHolder(
+    inner class CharacterViewHolder(
         itemCharacterBinding: RecyclerItemCharacterBinding,
         private var onItemClickListener: OnItemClickListener? = null
     ) :
