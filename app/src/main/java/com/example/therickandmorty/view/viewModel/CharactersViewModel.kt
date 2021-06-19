@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.therickandmorty.data.model.Characters
-import com.example.therickandmorty.data.repository.CharactersRepository
+import com.example.therickandmorty.data.repository.RickAndMortyRepository
 import com.example.therickandmorty.util.Resource
 import kotlinx.coroutines.launch
 
-class CharactersViewModel (private val charactersRepository: CharactersRepository) : ViewModel() {
+class CharactersViewModel (private val rickAndMortyRepository: RickAndMortyRepository) : ViewModel() {
 
     private val characterList = MutableLiveData<Resource<Characters>>()
     private var oldCharacterList: Characters? = null
@@ -26,7 +26,7 @@ class CharactersViewModel (private val charactersRepository: CharactersRepositor
         viewModelScope.launch {
             characterList.postValue(Resource.loading(null))
             try {
-                val data = charactersRepository.getCharacters(page)
+                val data = rickAndMortyRepository.getCharacters(page)
                 /**
                  * Save first time fetched data into a buffer for the load more action.
                  */
@@ -49,7 +49,7 @@ class CharactersViewModel (private val charactersRepository: CharactersRepositor
         viewModelScope.launch {
             characterList.postValue(Resource.loading(null))
             try {
-                val data = charactersRepository.getCharacters(page)
+                val data = rickAndMortyRepository.getCharacters(page)
                 if(data.results.isNotEmpty()) {
                     /**
                      * Get old data and add new data into it.
