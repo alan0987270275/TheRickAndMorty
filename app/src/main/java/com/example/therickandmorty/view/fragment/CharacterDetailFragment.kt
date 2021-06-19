@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
@@ -43,6 +44,9 @@ class CharacterDetailFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        /***
+         * For the transition animation
+         */
         sharedElementEnterTransition =
             TransitionInflater
                 .from(context)
@@ -113,7 +117,17 @@ class CharacterDetailFragment : Fragment() {
     private fun initRecyclerView(episode: List<String>) = with(binding) {
         val linearLayoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        episodeRecyclerView.adapter = EpisodeAdapter(episode)
+        episodeRecyclerView.adapter =
+            EpisodeAdapter(episode, object : EpisodeAdapter.OnItemClickListener {
+                override fun onItemClick(episode: String) {
+                    val action =
+                        CharacterDetailFragmentDirections.actionCharacterDetailFragmentToEpisodeFragment(
+                            episode
+                        )
+                    findNavController().navigate(action)
+                }
+
+            })
         episodeRecyclerView.layoutManager = linearLayoutManager
     }
 
