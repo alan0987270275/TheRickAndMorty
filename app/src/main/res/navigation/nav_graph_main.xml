@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/characterListFragment"
         android:name="com.example.therickandmorty.view.fragment.CharacterListFragment"
-        android:label="fragment_character_list"
         tools:layout="@layout/fragment_character_list">
         <action
             android:id="@+id/action_characterListFragment_to_characterDetailFragment"
@@ -21,7 +20,6 @@
     <fragment
         android:id="@+id/characterDetailFragment"
         android:name="com.example.therickandmorty.view.fragment.CharacterDetailFragment"
-        android:label="fragment_character_detail"
         tools:layout="@layout/fragment_character_detail">
         <action
             android:id="@+id/action_characterDetailFragment_to_episodeFragment"
@@ -30,7 +28,6 @@
     <fragment
         android:id="@+id/episodeFragment"
         android:name="com.example.therickandmorty.view.fragment.EpisodeFragment"
-        android:label="fragment_episode"
         tools:layout="@layout/fragment_episode">
         <argument
             android:name="episode"
