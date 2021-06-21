@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
@@ -36,7 +38,7 @@ class CharacterDetailFragment : Fragment() {
     private var _binding: FragmentCharacterDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val sharedModel: ShareSelectedCharacterViewModel by activityViewModels()
+    private val sharedModel: ShareSelectedCharacterViewModel by navGraphViewModels(R.id.nav_graph_main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,17 @@ class CharacterDetailFragment : Fragment() {
             TransitionInflater
                 .from(context)
                 .inflateTransition(android.R.transition.move)
+
+        /**
+         *   Implement Custom Back Navigation:
+         *   when user pressBack in CharacterDetailFragment, we also need to pop out the data
+         *   that stored in the ShareSelectedCharacterViewModel to retrieve previous one.
+         */
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().popBackStack()
+            sharedModel.pop()
+        }
+
 
     }
 

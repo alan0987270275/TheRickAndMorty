@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.therickandmorty.R
 import com.example.therickandmorty.data.api.ApiHelper
@@ -45,7 +46,7 @@ class EpisodeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: EpisodeViewModel
-    private val shareViewModel: ShareSelectedCharacterViewModel by activityViewModels()
+    private val shareViewModel: ShareSelectedCharacterViewModel by navGraphViewModels(R.id.nav_graph_main)
     val args: EpisodeFragmentArgs by navArgs()
     private lateinit var adapter: CharactersAdapter
 
