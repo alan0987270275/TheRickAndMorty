@@ -148,7 +148,6 @@ class CharacterListFragment : Fragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     it.data?.let { list ->
-                        Log.d(TAG, "Size: ${list.results.size}")
                         /**
                          * Must use toList() to create a new List everytime, due to
                          * using the AsyncListDiffer.

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
 import com.example.therickandmorty.R
+import com.example.therickandmorty.data.model.Character
 import com.example.therickandmorty.databinding.FragmentCharacterDetailBinding
 import com.example.therickandmorty.view.adapter.EpisodeAdapter
 import com.example.therickandmorty.view.viewModel.ShareSelectedCharacterViewModel
@@ -68,50 +69,57 @@ class CharacterDetailFragment : Fragment() {
         initView()
     }
 
-    private fun initView() = with(binding) {
+    private fun initView() {
         sharedModel.selected.value?.apply {
-            Glide.with(headImageView.context)
-                .load(this.image)
-                .into(headImageView)
+            setUpView(this)
+        }
+    }
 
-            /**
-             * Update the transitionNames for sharedElementEnterTransition
-             */
-            headImageView.transitionName = this.id.toString()
+    private fun setUpView(character: Character) = with(binding) {
+        Glide.with(headImageView.context)
+            .load(character.image)
+            .into(headImageView)
 
-            nameTextView.text = this.name
+        /**
+         * Update the transitionNames for sharedElementEnterTransition
+         */
 
-            aliveStatusTextView.text = this.status
-            when (this.status) {
-                "Alive" -> {
-                    aliveStatusImageView.colorFilter =
-                        PorterDuffColorFilter(
-                            resources.getColor(R.color.green),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                }
-                "unknown" -> {
-                    aliveStatusImageView.colorFilter =
-                        PorterDuffColorFilter(
-                            resources.getColor(R.color.gray),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                }
-                "Dead" -> {
-                    aliveStatusImageView.colorFilter =
-                        PorterDuffColorFilter(
-                            resources.getColor(R.color.red),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                }
+        /**
+         * Update the transitionNames for sharedElementEnterTransition
+         */
+        headImageView.transitionName = character.id.toString()
 
+        nameTextView.text = character.name
+
+        aliveStatusTextView.text = character.status
+        when (character.status) {
+            "Alive" -> {
+                aliveStatusImageView.colorFilter =
+                    PorterDuffColorFilter(
+                        resources.getColor(R.color.green),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+            }
+            "unknown" -> {
+                aliveStatusImageView.colorFilter =
+                    PorterDuffColorFilter(
+                        resources.getColor(R.color.gray),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+            }
+            "Dead" -> {
+                aliveStatusImageView.colorFilter =
+                    PorterDuffColorFilter(
+                        resources.getColor(R.color.red),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
             }
 
-            locationTextView.text = this.location.name
-            firstSeenTextView.text = this.origin.name
-            initRecyclerView(this.episode)
         }
 
+        locationTextView.text = character.location.name
+        firstSeenTextView.text = character.origin.name
+        initRecyclerView(character.episode)
     }
 
     private fun initRecyclerView(episode: List<String>) = with(binding) {
