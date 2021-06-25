@@ -25,8 +25,8 @@
             android:id="@+id/action_characterDetailFragment_to_episodeFragment"
             app:destination="@id/episodeFragment" />
         <action
-            android:id="@+id/action_characterDetailFragment_to_locationFragment2"
-            app:destination="@id/locationFragment2" />
+            android:id="@+id/action_characterDetailFragment_to_locationFragment"
+            app:destination="@id/locationFragment" />
     </fragment>
     <fragment
         android:id="@+id/episodeFragment"
@@ -46,12 +46,16 @@
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-        android:id="@+id/locationFragment2"
-        android:name="com.example.therickandmorty.LocationFragment"
+        android:id="@+id/locationFragment"
+        android:name="com.example.therickandmorty.view.fragment.LocationFragment"
         android:label="fragment_location"
         tools:layout="@layout/fragment_location" >
+        <argument
+            android:name="location"
+            android:defaultValue="1"
+            app:argType="string" />
         <action
-            android:id="@+id/action_locationFragment2_to_characterDetailFragment"
+            android:id="@+id/action_locationFragment_to_characterDetailFragment"
             app:destination="@id/characterDetailFragment" />
     </fragment>
 </navigation>

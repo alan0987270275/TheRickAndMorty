@@ -132,6 +132,31 @@ class CharacterDetailFragment : Fragment() {
 
         locationTextView.text = character.location.name
         firstSeenTextView.text = character.origin.name
+        val locationOnClickListener = View.OnClickListener { view ->
+            when (view) {
+                firstSeenTextView -> {
+                    val action =
+                        CharacterDetailFragmentDirections.actionCharacterDetailFragmentToLocationFragment(
+                            character.origin.url
+                        )
+                    findNavController().navigate(action)
+                }
+                locationTextView -> {
+                    val action =
+                        CharacterDetailFragmentDirections.actionCharacterDetailFragmentToLocationFragment(
+                            character.location.url
+                        )
+                    findNavController().navigate(action)
+
+                }
+            }
+        }
+        locationTextView.setOnClickListener(
+            if (locationTextView.text != "unknown") locationOnClickListener else null
+        )
+        firstSeenTextView.setOnClickListener {
+            if (firstSeenTextView.text != "unknown") locationOnClickListener else null
+        }
         initRecyclerView(character.episode)
     }
 

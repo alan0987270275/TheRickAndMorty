@@ -1,14 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LocationFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.fragment.LocationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/locationTitleTextView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Location Name"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/locationNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/purple_700"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintEnd_toEndOf="@id/locationTitleTextView"
+        app:layout_constraintTop_toBottomOf="@id/locationTitleTextView"
+        app:layout_constraintStart_toStartOf="@id/locationTitleTextView"/>
+
+    <TextView
+        android:id="@+id/locationTypeTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Location Type"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/locationNameTextView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/locationTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/locationTypeTitleTextView"
+        app:layout_constraintStart_toStartOf="@id/locationTypeTitleTextView"/>
+
+    <TextView
+        android:id="@+id/locationDimensionTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Location Dimension"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/locationTypeTextView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/locationDimensionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/locationDimensionTitleTextView"
+        app:layout_constraintStart_toStartOf="@id/locationDimensionTitleTextView"/>
+
+    <TextView
+        android:id="@+id/characterTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="characters"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/locationDimensionTextView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/characterTitleTextView"
+        app:layout_constraintStart_toStartOf="@id/characterTitleTextView"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:itemCount="20"
+        tools:listitem="@layout/recycler_item_character" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

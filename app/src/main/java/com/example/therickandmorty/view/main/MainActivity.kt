@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
                 title = when (destination.id) {
                     R.id.characterDetailFragment -> "Character"
                     R.id.episodeFragment -> "Episode"
+                    R.id.locationFragment -> "Location"
                     else -> "The Rick And Morty"
                 }
         }
