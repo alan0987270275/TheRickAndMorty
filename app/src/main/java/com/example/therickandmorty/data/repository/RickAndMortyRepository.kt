@@ -8,4 +8,6 @@ class RickAndMortyRepository(private val apiHelper: ApiHelper) {
     suspend fun getMultipleCharacter(ids: String) = apiHelper.getMultipleCharacter(ids)
 
     suspend fun getSingleEpisode(id: String) = apiHelper.getEpisode(id)
+
+    suspend fun getSingleLocation(id: String) = apiHelper.getLocation(id)
 }
