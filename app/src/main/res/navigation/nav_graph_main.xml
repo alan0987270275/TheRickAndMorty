@@ -24,10 +24,14 @@
         <action
             android:id="@+id/action_characterDetailFragment_to_episodeFragment"
             app:destination="@id/episodeFragment" />
+        <action
+            android:id="@+id/action_characterDetailFragment_to_locationFragment2"
+            app:destination="@id/locationFragment2" />
     </fragment>
     <fragment
         android:id="@+id/episodeFragment"
         android:name="com.example.therickandmorty.view.fragment.EpisodeFragment"
+        android:label="fragment_episode"
         tools:layout="@layout/fragment_episode">
         <argument
             android:name="episode"
@@ -40,5 +44,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationFragment2"
+        android:name="com.example.therickandmorty.LocationFragment"
+        android:label="fragment_location"
+        tools:layout="@layout/fragment_location" >
+        <action
+            android:id="@+id/action_locationFragment2_to_characterDetailFragment"
+            app:destination="@id/characterDetailFragment" />
     </fragment>
 </navigation>
