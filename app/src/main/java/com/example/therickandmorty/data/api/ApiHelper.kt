@@ -7,4 +7,6 @@ class ApiHelper(private val apiService: ApiService) {
     suspend fun getMultipleCharacter(ids: String) = apiService.getMultipleCharacter(ids)
 
     suspend fun getEpisode(id: String) = apiService.getSingleEpisode(id)
+
+    suspend fun getLocation(id: String) = apiService.getSingleLocation(id)
 }

@@ -3,6 +3,7 @@ package com.example.therickandmorty.data.api
 import com.example.therickandmorty.data.model.Character
 import com.example.therickandmorty.data.model.Characters
 import com.example.therickandmorty.data.model.Episode
+import com.example.therickandmorty.data.model.Location
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,4 +17,8 @@ interface ApiService {
 
     @GET("episode/{id}")
     suspend fun getSingleEpisode(@Path("id") id: String): Episode
+
+    @GET("location/{id}")
+    suspend fun getSingleLocation(@Path("id") id: String): Location
+
 }
