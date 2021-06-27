@@ -1,15 +1,18 @@
 package com.example.therickandmorty.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.therickandmorty.R
+import com.example.therickandmorty.apolloClient
+import com.apollographql.apollo.coroutines.await
 import com.example.therickandmorty.databinding.FragmentCharacterListBinding
 import com.example.therickandmorty.view.adapter.CharactersAdapter
+import com.example.therickandmortyserver.CharacterListQuery
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,6 +53,11 @@ class CharacterListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        lifecycleScope.launchWhenResumed {
+            val response = apolloClient.query(CharacterListQuery()).await()
+
+            Log.d("LaunchList", "Success ${response?.data}")
+        }
     }
 
     private fun initView() = with(binding) {
