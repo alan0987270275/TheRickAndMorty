@@ -6,5 +6,5 @@ import com.example.therickandmortyserver.CharacterListQuery
 
 class ApiHelper(private val apolloClient: ApolloClient) {
 
-    suspend fun getCharacter() = apolloClient.query(CharacterListQuery()).await()
+    suspend fun getCharacters() = apolloClient.query(CharacterListQuery()).await()
 }
