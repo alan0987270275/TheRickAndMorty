@@ -23,12 +23,8 @@ class CharactersViewModel (private val rickAndMortyRepository: RickAndMortyRepos
             characterList.postValue(Resource.loading(null))
             try {
                 val response = rickAndMortyRepository.getCharacters()
-                if(response.data?.characters?.results?.isNotEmpty() == true) {
-                    Log.d(TAG, "${response?.data?.characters?.results!![0]}")
-                    if(response?.data?.characters?.results != null) {
-                        characterList.postValue(Resource.success(response.data!!.characters?.results))
-                    }
-
+                if(response?.data?.characters?.results != null) {
+                    characterList.postValue(Resource.success(response.data!!.characters?.results))
                 }
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
