@@ -56,7 +56,7 @@ class CharacterListFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             val response = apolloClient.query(CharacterListQuery()).await()
 
-            Log.d("LaunchList", "Success ${response?.data}")
+            Log.d("LaunchList", "Success ${response?.data?.characters?.results}")
         }
     }
 
